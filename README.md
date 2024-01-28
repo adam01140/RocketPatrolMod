@@ -1,1 +1,1 @@
-#Rocket Patrol Tutorial [3–5 hours]# RocketPatrolMod
+#Rocket Patrol Tutorial [3–5 hours]
