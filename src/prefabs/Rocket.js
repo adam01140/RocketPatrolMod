@@ -55,7 +55,20 @@ class Rocket extends Phaser.GameObjects.Sprite {
             this.reset();
 			this.scene.clock.elapsed += 3000; // Subtracts 3 seconds from the clock
 
+			// Switch current player
+			
+			alert(this.currentPlayer)
+    
+	
+	
+	if(this.scene.currentPlayer == 1) {
+            this.scene.currentPlayer = 2;
+        } else if(this.scene.currentPlayer == 2) {
+            this.scene.currentPlayer = 1;
+        }
 		
+		
+	//this.scene.updateScoreDisplay();
 		
 		}
     }

@@ -22,8 +22,8 @@ class Play extends Phaser.Scene {
 		 this.currentPlayer = 1; // Start with player 1
         this.p1Score = 0;
         this.p2Score = 0;
-
-
+		this.scoreLeft = 0;
+		this.hey = 0;
 
 		
 
@@ -62,6 +62,8 @@ this.p1Rocket = new Rocket(
     this.p1Score,
     this.p2Score,
     this.scoreLeft
+	//this.hey
+	
 );
 
 
@@ -105,7 +107,11 @@ this.p1Rocket = new Rocket(
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2,  this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*1,  this.p1Score, scoreConfig);
+		this.hey = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*3.7,  this.p2Score, scoreConfig);
+		
+		
+		
 		this.timeLeftText = this.add.text(borderUISize + borderPadding + 150, borderUISize * 1 + borderPadding * 2, 'Time Left: 60', { fontSize: '28px', fill: '#FFFFFF' });
 		this.hello = this.add.text(borderUISize + borderPadding + 150, borderUISize * 1.7 + borderPadding * 2, 'hello', { fontSize: '28px', fill: '#FFFFFF' });
 		//this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
@@ -135,6 +141,12 @@ this.p1Rocket = new Rocket(
             this.timeLeftText.setText('Time Left: ' + remainingTime);
 			this.hello.setText('Player: ' + this.currentPlayer);
 			
+			
+			if(this.currentPlayer == 1){
+				//this.scoreLeft.text = this.p1Score; 
+			} else if(this.currentPlayer == 2){  
+				//this.scoreLeft.text = this.p2Score; 
+			}
         }
 
 
@@ -218,12 +230,14 @@ this.p1Rocket = new Rocket(
 		
 		if(this.currentPlayer == 1){
         this.p1Score += ship.points;
-        this.scoreLeft.text = this.p2Score; 
+        
+		this.scoreLeft.setText('P1: ' + this.p1Score);
 		this.currentPlayer = 2;
 		alert("player 1 turns to player 2");
         } else if(this.currentPlayer == 2){
         this.p2Score += ship.points;
-        this.scoreLeft.text = this.p1Score; 
+        
+		this.hey.setText('P2: ' + this.p2Score);
 		this.currentPlayer = 1;
 		alert("player 2 turns to player 1");
         }
@@ -231,4 +245,8 @@ this.p1Rocket = new Rocket(
 		
         this.sound.play('sfx_explosion');
       }
+	  
+	  
+	  
 }
+
