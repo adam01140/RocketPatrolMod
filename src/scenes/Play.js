@@ -15,7 +15,8 @@ class Play extends Phaser.Scene {
     create() {
 		
 		
-this.timerText = this.add.text(20, 20, 'Time: 60', { font: '18px Arial', fill: '#FFFFFF' });
+		this.timeLeftText = this.add.text(borderUISize + borderPadding, borderUISize * 2 + borderPadding * 2, 'Time Left: 60', { fontSize: '28px', fill: '#FFFFFF' });
+
 
 
         // place tile sprite
@@ -70,8 +71,11 @@ this.timerText = this.add.text(20, 20, 'Time: 60', { font: '18px Arial', fill: '
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
-
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2,  this.p1Score, scoreConfig);
+		
+		this.timeLeftText = this.add.text(borderUISize + borderPadding + 150, borderUISize * 1.2 + borderPadding * 2, 'Time Left: 60', { fontSize: '28px', fill: '#FFFFFF' });
+		
+		//this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
         // GAME OVER flag
         this.gameOver = false;
 
@@ -91,11 +95,10 @@ this.timerText = this.add.text(20, 20, 'Time: 60', { font: '18px Arial', fill: '
 
 
 if (!this.gameOver) {
-    const elapsedTime = this.clock.getElapsed(); // Get elapsed time in milliseconds
-    const remainingTime = Math.ceil((game.settings.gameTimer - elapsedTime) / 1000);
-    this.timerText.setText('Time: ' + remainingTime);
-}
-
+            const elapsedTime = this.clock.getElapsed();
+            const remainingTime = Math.ceil((this.game.settings.gameTimer - elapsedTime) / 1000);
+            this.timeLeftText.setText('Time Left: ' + remainingTime);
+        }
 
 
 
