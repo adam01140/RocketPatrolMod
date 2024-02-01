@@ -148,6 +148,10 @@ if (!this.gameOver) {
     }
 
     shipExplode(ship) {
+		
+		this.clock.elapsed -= 5000; // Adds 5 seconds to the clock
+		
+		
         // temporarily hide ship
         ship.alpha = 0;                         
         // create explosion sprite at ship's position
