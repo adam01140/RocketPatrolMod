@@ -4,6 +4,9 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
+		
+		this.load.image('particle', './assets/particle.png');
+
         // load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
@@ -15,9 +18,23 @@ class Play extends Phaser.Scene {
     create() {
 		
 		
+		
+		 this.currentPlayer = 1; // Start with player 1
+        this.p1Score = 0;
+        this.p2Score = 0;
+
+
+
+		
+
+        // define keys for both players
+        this.keyFPlayer1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        this.keyFPlayer2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+		
+		
+		
 		this.timeLeftText = this.add.text(borderUISize + borderPadding, borderUISize * 2 + borderPadding * 2, 'Time Left: 60', { fontSize: '28px', fill: '#FFFFFF' });
-
-
+		this.hello = this.add.text(borderUISize + borderPadding, borderUISize * 2 + borderPadding * 3, 'hello', { fontSize: '28px', fill: '#FFFFFF' });
 
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
@@ -31,7 +48,24 @@ class Play extends Phaser.Scene {
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
 
         // add Rocket (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
+        
+		// Pass the currentPlayer as a property of the scene when creating the Rocket object
+
+// Pass this.scoreLeft as a parameter when creating the Rocket object
+this.p1Rocket = new Rocket(
+    this,
+    game.config.width/2,
+    game.config.height - borderUISize - borderPadding,
+    'rocket',
+    0,
+    this.currentPlayer,
+    this.p1Score,
+    this.p2Score,
+    this.scoreLeft
+);
+
+
+//this.p1Rocket.currentPlayer = this.currentPlayer; // Set the currentPlayer property
 
         // add Spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
@@ -72,9 +106,8 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2,  this.p1Score, scoreConfig);
-		
-		this.timeLeftText = this.add.text(borderUISize + borderPadding + 150, borderUISize * 1.2 + borderPadding * 2, 'Time Left: 60', { fontSize: '28px', fill: '#FFFFFF' });
-		
+		this.timeLeftText = this.add.text(borderUISize + borderPadding + 150, borderUISize * 1 + borderPadding * 2, 'Time Left: 60', { fontSize: '28px', fill: '#FFFFFF' });
+		this.hello = this.add.text(borderUISize + borderPadding + 150, borderUISize * 1.7 + borderPadding * 2, 'hello', { fontSize: '28px', fill: '#FFFFFF' });
 		//this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
         // GAME OVER flag
         this.gameOver = false;
@@ -88,16 +121,20 @@ class Play extends Phaser.Scene {
         }, null, this);
     }
 
+
+	
+	
     update() {
-		
-		
-		
+			
 
-
-if (!this.gameOver) {
+	
+	
+		if (!this.gameOver) {
             const elapsedTime = this.clock.getElapsed();
             const remainingTime = Math.ceil((this.game.settings.gameTimer - elapsedTime) / 1000);
             this.timeLeftText.setText('Time Left: ' + remainingTime);
+			this.hello.setText('Player: ' + this.currentPlayer);
+			
         }
 
 
@@ -151,7 +188,21 @@ if (!this.gameOver) {
 		
 		this.clock.elapsed -= 5000; // Adds 5 seconds to the clock
 		
-		
+		  let emitter = this.add.particles('particle', {
+        x: ship.x,
+        y: ship.y,
+        speed: 100,
+        scale: { start: 1, end: 0 },
+        blendMode: 'ADD',
+        lifespan: 600
+    });
+
+    // Optionally, destroy the emitter after a short duration
+    this.time.delayedCall(600, () => {
+        emitter.destroy(); // This will remove the emitter from the scene
+    });
+    
+	
         // temporarily hide ship
         ship.alpha = 0;                         
         // create explosion sprite at ship's position
@@ -163,9 +214,21 @@ if (!this.gameOver) {
             boom.destroy();                       // remove explosion sprite
         });
         // score add and repaint
+		
+		
+		if(this.currentPlayer == 1){
         this.p1Score += ship.points;
+        this.scoreLeft.text = this.p2Score; 
+		this.currentPlayer = 2;
+		alert("player 1 turns to player 2");
+        } else if(this.currentPlayer == 2){
+        this.p2Score += ship.points;
         this.scoreLeft.text = this.p1Score; 
-        
+		this.currentPlayer = 1;
+		alert("player 2 turns to player 1");
+        }
+		
+		
         this.sound.play('sfx_explosion');
       }
 }
